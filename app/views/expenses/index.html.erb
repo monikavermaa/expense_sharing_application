@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Expenses</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+
+  <style>
+    /* Add your custom CSS styles here */
+    body {
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      background-color: #007BFF;
+      color: #FFFFFF;
+      padding: 10px;
+      text-align: center;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    #notice {
+      color: #FF5733;
+      text-align: center;
+    }
+    .actions {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <p id="notice"><%= notice %></p>
+  <h2>Expenses </h2>
+  <%# if user_signed_in? %>
+  
+  <%# end %>
+
+  <canvas id="expenseChart" width="400" height="200"></canvas>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Description</th>
+        <th>Amount</th>
+        <th>Date</th>
+        <!-- <th>Category</th> -->
+        <th colspan="3">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @expenses.each_with_index do |expense, i| %>
+        <tr>
+          <td><%= i + 1 %></td>
+          <td><%= expense.description %></td>
+          <td><%= number_to_currency(expense.amount, unit: 'AUD') %></td>
+          <td><%= expense.date.strftime('%Y-%m-%d') %></td>
+         <td class="actions"><%= link_to 'Show', expense, class: 'btn btn-primary' %></td>
+          <td class="actions"><%= link_to 'Edit', edit_expense_path(expense), class: 'btn btn-warning' %></td>
+          <td class="actions"><%= link_to 'Destroy', expense, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <br>
+  <%= link_to 'New Expense', new_expense_path %>
+</body>
+</html>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var ctx = document.getElementById('expenseChart').getContext('2d');
+    var chartData = [];
+    
+    // Use Ruby's ERB to convert @expenses into a JavaScript-friendly format
+    var expensesData = <%= @expenses.to_json.html_safe %>;
+
+    expensesData.forEach(function (expense) {
+      chartData.push({
+        label: expense.date, // Display the date on the x-axis
+        data: [expense.amount], // Use expense.amount as the data point
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1,
+      });
+    });
+
+    var chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: chartData.map(function (data) {
+          return data.label;
+        }),
+        datasets: chartData,
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+  });
+</script>
+

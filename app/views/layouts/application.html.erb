@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ExpenseSharingApp</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%#= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <%= yield %>
+  </body>
+
+    <footer class="footer text-dark">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <p>&copy; <%= Time.now.year %> Monika Verma | +91 9617-269-538 | monikakasanya@gmail.com </p>
+          
+        </div>
+        <div class="col-md-6 text-right">
+          <!-- Add any additional content or links here -->
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</html>
